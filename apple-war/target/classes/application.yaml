@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: apple
+
+server:
+  port: 8500
+
+
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: INFO
+    org.springframework.boot.web: INFO
+    com.asg.services.apple: INFO
+  file:
+    path: ${user.home}/asg/services/${spring.application.name}/logs
+    name: ${logging.file.path}/${spring.application.name}.log
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{[%-5level]} %X{CORRELATION_ID} %X{TENANT}:%X{USER} %X{SERVICE} %style{[%t]}{magenta} %style{%c:%M}{cyan} - %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %X{CORRELATION_ID} %X{TENANT}:%X{USER} [%t] %c:%M - %msg%n'
+
+management:
+  health:
+    ldap:
+      enabled: false
