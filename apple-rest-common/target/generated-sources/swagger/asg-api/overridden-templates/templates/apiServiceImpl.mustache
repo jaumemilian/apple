@@ -1,0 +1,33 @@
+package {{package}}.impl;
+
+import {{package}}.*;
+import {{modelPackage}}.*;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.Map;
+import java.util.List;
+
+
+import java.io.InputStream;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+{{#useBeanValidation}}
+import javax.validation.constraints.*;
+
+// This class should not be generated.
+{{/useBeanValidation}}
+{{>generatedAnnotation}}
+{{#operations}}
+public class {{classname}}ServiceImpl extends {{classname}}Service {
+    {{#operation}}
+    @Override
+    public Response {{nickname}}({{#each allParams}}{{>serviceQueryParams}}{{>servicePathParams}}{{>serviceHeaderParams}}{{>serviceBodyParams}}{{>serviceFormParams}}{{^@last}}, {{/@last}}{{/each}}) {
+        // remove
+        return null;
+    }
+    {{/operation}}
+}
+{{/operations}}

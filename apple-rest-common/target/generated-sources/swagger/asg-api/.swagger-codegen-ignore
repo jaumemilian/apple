@@ -1,0 +1,8 @@
+# Swagger Codegen Ignore
+
+# This file contains the list of files/directories, which are ignored during Swagger code generation.
+# Excluding generation of Impl, factories and Service classes and allowing ServiceApi Interface and Dto.
+
+/**/*ServiceImpl.java
+/**/factories/**
+/**/*Service.java

@@ -1,0 +1,5 @@
+com\asg\services\apple\dto\Apple.class
+com\asg\services\apple\dto\AppleList.class
+com\asg\services\apple\dto\AppleCreateRequest.class
+com\asg\services\apple\dto\AppleUpdateRequest.class
+com\asg\services\apple\api\AppleTagApi.class
