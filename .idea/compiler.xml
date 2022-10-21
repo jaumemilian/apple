@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="apple-inf" />
+        <module name="apple-rest-server" />
+        <module name="apple-test" />
+        <module name="apple-rest-common" />
+        <module name="apple-war" />
+        <module name="apple-impl" />
+        <module name="apple-rest-client" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="apple-impl" options="-Xlint:unchecked" />
+      <module name="apple-inf" options="-Xlint:unchecked" />
+      <module name="apple-rest-client" options="-Xlint:unchecked" />
+      <module name="apple-rest-common" options="-Xlint:unchecked" />
+      <module name="apple-rest-server" options="-Xlint:unchecked" />
+      <module name="apple-test" options="-Xlint:unchecked" />
+      <module name="apple-war" options="-Xlint:unchecked" />
+    </option>
+  </component>
+</project>

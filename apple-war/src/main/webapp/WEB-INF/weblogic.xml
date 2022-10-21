@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  #%L
+  apple-war
+  %%
+  Copyright (C) 2003 - 2021 ASG Technologies Group
+  %%
+  NOTICE:  All information contained herein is, and remains
+  the property of ASG Technologies Group, Inc. and its suppliers,
+  if any.  The intellectual and technical concepts contained
+  herein are proprietary to ASG Technologies Group, Inc.
+  and its suppliers and may be covered by U.S. and Foreign Patents,
+  patents in process, and are protected by trade secret or copyright law.
+  Dissemination of this information or reproduction of this material
+  is strictly forbidden unless prior written permission is obtained
+  from ASG Technologies Group, Inc.
+  #L%
+  -->
+
+<wls:weblogic-web-app
+        xmlns:wls="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-web-app
+        http://xmlns.oracle.com/weblogic/weblogic-web-app/1.4/weblogic-web-app.xsd">
+    <wls:context-root>/apple</wls:context-root>
+    <wls:container-descriptor>
+        <wls:prefer-application-packages>
+            <wls:package-name>org.slf4j.*</wls:package-name>
+            <wls:package-name>org.springframework.*</wls:package-name>
+            <!-- jsr311 -->
+            <wls:package-name>javax.ws.rs.*</wls:package-name>
+            <!-- javassist -->
+            <wls:package-name>javassist.*</wls:package-name>
+            <!-- aop repackaged -->
+            <wls:package-name>org.aopalliance.*</wls:package-name>
+            <!-- jersey 2 -->
+            <wls:package-name>jersey.repackaged.*</wls:package-name>
+            <wls:package-name>org.glassfish.jersey.*</wls:package-name>
+            <wls:package-name>com.sun.research.ws.wadl.*</wls:package-name>
+            <wls:package-name>com.sun.ws.rs.ext.*</wls:package-name>
+        </wls:prefer-application-packages>
+        <wls:prefer-application-resources>
+            <wls:resource-name>META-INF/services/javax.xml.ws.spi.Provider</wls:resource-name>
+            <wls:resource-name>META-INF/services/javax.servlet.ServletContainerInitializer</wls:resource-name>
+            <wls:resource-name>META-INF/services/javax.ws.rs.ext.RuntimeDelegate</wls:resource-name>
+            <wls:resource-name>META-INF/services/javax.xml.bind.JAXBContext</wls:resource-name>
+            <wls:resource-name>org/jboss/logging/Logger.class</wls:resource-name>
+
+            <wls:resource-name>org.springframework.*</wls:resource-name>
+            <wls:resource-name>com.fasterxml.jackson.*</wls:resource-name>
+            <!-- apis -->
+            <wls:resource-name>javax.ws.rs.*</wls:resource-name>
+            <!-- jersey -->
+            <wls:resource-name>META-INF/services/org.glassfish.jersey.*</wls:resource-name>
+            <wls:resource-name>org.glassfish.jersey.*</wls:resource-name>
+            <wls:resource-name>jersey.repackaged.*</wls:resource-name>
+            <!-- hk2 -->
+            <wls:resource-name>META-INF/services/org.glassfish.hk2.*</wls:resource-name>
+        </wls:prefer-application-resources>
+    </wls:container-descriptor>
+</wls:weblogic-web-app>

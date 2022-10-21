@@ -1,0 +1,140 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Apple
+  description: Apple swagger definiton
+
+servers:
+  - url: '/rest'
+tags:
+  - name: AppleTag
+
+paths:
+  # TODO: This is a placeholder. You need to change this to work for your service
+  /apple/apples:
+    post:
+      tags:
+        - AppleTag
+      operationId: createApple
+      summary: create a Apple
+      description: create a Apple
+      requestBody:
+        content:
+          application/vnd.asg-services-apple-create-request.v1+json:
+            schema:
+              $ref: '#/components/schemas/AppleCreateRequest'
+      responses:
+        '201':
+          description: Created a Apple
+          content:
+            application/vnd.asg-services-apple.v1+json:
+              schema:
+                $ref: '#/components/schemas/Apple'
+
+    get:
+      tags:
+        - AppleTag
+      operationId: getAllApples
+      summary: return all Apples
+      description: return all Apples
+      responses:
+        '200':
+          description: List of Apples
+          content:
+            application/vnd.asg-services-apple-list.v1+json:
+              schema:
+                $ref: '#/components/schemas/AppleList'
+
+
+  /apple/apples/{appleId}:
+    get:
+      tags:
+        - AppleTag
+      operationId: getApple
+      summary: return a Apple
+      description: return a Apple
+      parameters:
+        - name: appleId
+          in: path
+          required: true
+          description: apple Id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The Apple
+          content:
+            application/vnd.asg-services-apple.v1+json:
+              schema:
+                $ref: '#/components/schemas/Apple'
+
+    put:
+      tags:
+        - AppleTag
+      operationId: updateApple
+      summary: Update a Apple
+      description: Update a Apple
+      parameters:
+        - name: appleId
+          in: path
+          required: true
+          description: apple Id
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/vnd.asg-services-apple-update-request.v1+json:
+            schema:
+              $ref: '#/components/schemas/AppleUpdateRequest'
+      responses:
+        '200':
+          description: The updated Apple
+          content:
+            application/vnd.asg-services-apple.v1+json:
+              schema:
+                $ref: '#/components/schemas/Apple'
+
+    delete:
+      tags:
+        - AppleTag
+      operationId: deleteApple
+      summary: Deletes a Apple
+      description: Deletes a Apple
+      parameters:
+        - name: appleId
+          in: path
+          required: true
+          description: apple Id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: The Apple was deleted
+
+####################
+components:
+  schemas:
+    AppleCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+    AppleUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+    Apple:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+
+    AppleList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Apple'

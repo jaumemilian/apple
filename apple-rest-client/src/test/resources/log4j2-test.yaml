@@ -1,0 +1,23 @@
+Configuration:
+  name: test
+  status: error
+  monitorInterval: 30
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout: {Pattern: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %X{CORRELATION_ID} %X{USER} %X{SERVICE} [%t] %c:%M - %msg%n'}
+
+  Loggers:
+    Logger:
+    - name: com.asg.services.apple
+      level: debug
+      additivity: false
+      AppenderRef:
+        ref: Console
+
+    Root:
+      level: info
+      AppenderRef:
+        ref: Console

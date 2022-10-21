@@ -1,0 +1,139 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "apple.fullname" . }}
+data:
+  fluent.conf: |-
+    <source>
+      @type tail
+      tag apple.application
+      path /app-logs/apple.log
+      pos_file /app-logs/apple.pos
+      multiline_flush_interval 5s
+      read_from_head true
+      <parse>
+        @type multiline
+        format_firstline /\d{4}-\d{1,2}-\d{1,2}/
+        format1 /^(?<datetime>\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}.\d{1,3})\s\[(?<level>[^\[]*)\]\s(?<correlationId>[^\s]*)\s(?<message>.*)/
+      </parse>
+    </source>
+
+    <filter apple.*>
+      @type record_transformer
+      renew_record true
+      enable_ruby true
+
+      <record>
+
+        log  ${record}
+
+        status ${ record["level"] == nil ? "NOTICE" : ( record["level"].upcase == "EXCEPTION" ? "ERROR" : ( record["level"].upcase  == "SEVERE" ? "CRITICAL" : record["level"].upcase )) }
+        service "#{ENV['SERVICE_NAME']}"
+        host "#{ENV['CURR_NODE_NAME']}"
+        logsource-internal "${tag_parts[1]}"
+        environment "#{ENV['ENVIRONMENT']}"
+        region "#{ENV['REGION']}"
+
+        kubernetes.cluster "#{ENV['CURR_CLUSTER_NAME']}"
+        kubernetes.host "#{ENV['CURR_NODE_NAME']}"
+        kubernetes.namespace_name "#{ENV['CURR_POD_NAMESPACE']}"
+        kubernetes.pod_name "#{ENV['CURR_POD_NAME']}"
+        kubernetes.pod_ip "#{ENV['CURR_POD_IP']}"
+        kubernetes.pod_service_account "#{ENV['CURR_SERVICE_ACCOUNT']}"
+        kubernetes.container_name "#{ENV['MAIN_CONTAINER_NAME']}"
+        kubernetes.container_image "#{ENV['CONTAINER_IMAGE']}"
+        kubernetes.container_image_version "#{ENV['CONTAINER_IMAGE_VERSION']}"
+
+        logagent.container_name "#{ENV['SIDE_CAR_CONTAINER_NAME']}"
+        logagent.container_image "#{ENV['SIDE_CAR_CONTAINER_IMAGE']}"
+        logagent.container_image_version "#{ENV['SIDE_CAR_CONTAINER_IMAGE_VERSION']}"
+
+      </record>
+    </filter>
+    <match apple.*>
+      @type rewrite_tag_filter
+      <rule>
+        key status
+        pattern /(WARN|ERROR|EXCEPTION|FATAL|CRITICAL|SEVERE)/
+        tag elasticsearch.datadog
+      </rule>
+      <rule>
+        key status
+        pattern /(WARN|ERROR|EXCEPTION|FATAL|CRITICAL|SEVERE)/
+        tag only.elasticsearch
+        invert true
+      </rule>
+    </match>
+
+    <match elasticsearch.datadog>
+      @type copy
+      <store ignore_error>
+        @type "aws-elasticsearch-service"
+        logstash_format true
+        logstash_prefix "app-log-#{ENV['MAIN_CONTAINER_NAME']}"
+        <buffer>
+          @type memory
+          flush_interval 45s
+          flush_thread_count 2
+          retry_wait 10s
+          retry_timeout 320s
+        </buffer>
+
+        <endpoint>
+          url "#{ENV['AWS_ES_HOST']}"
+          region "#{ENV['REGION']}"
+          assume_role_arn "#{ENV['ASSUME_ROLE']}"
+        </endpoint>
+
+        reconnect_on_error true
+        reload_on_failure true
+        reload_connections false
+
+        <secondary>
+          @type stdout
+        </secondary>
+      </store>
+
+      {{- if .Values.datadog }}
+      <store ignore_error>
+        @type datadog
+        @id fluentd_agent
+        api_key "#{ENV['DD_API_KEY']}"
+        host "#{ENV['DD_HOST']}"
+        ssl_port "#{ENV['DD_PORT']}"
+
+        # Optional
+        include_tag_key true
+        tag_key 'fluentd_tag'
+        dd_source "app-log-#{ENV['MAIN_CONTAINER_NAME']}"
+        dd_tags "#{ENV['TAGS']}, environment:#{ENV['ENVIRONMENT']}, region:#{ENV['REGION']}, cluster:#{ENV['CURR_CLUSTER_NAME']}, namespace:#{ENV['CURR_POD_NAMESPACE']}, service:#{ENV['SERVICE_NAME']}, version:#{ENV['CONTAINER_IMAGE_VERSION']}"
+      </store>
+      {{- end }}
+    </match>
+
+    <match only.elasticsearch>
+      @type "aws-elasticsearch-service"
+      logstash_format true
+      logstash_prefix "app-log-#{ENV['MAIN_CONTAINER_NAME']}"
+      <buffer>
+        @type memory
+        flush_interval 45s
+        flush_thread_count 2
+        retry_wait 10s
+        retry_timeout 320s
+      </buffer>
+
+      <endpoint>
+        url "#{ENV['AWS_ES_HOST']}"
+        region "#{ENV['REGION']}"
+        assume_role_arn "#{ENV['ASSUME_ROLE']}"
+      </endpoint>
+
+      reconnect_on_error true
+      reload_on_failure true
+      reload_connections false
+
+      <secondary>
+        @type stdout
+      </secondary>
+    </match>
